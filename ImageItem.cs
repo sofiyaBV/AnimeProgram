@@ -20,5 +20,6 @@ namespace AnimeProgram
         {
             return Author;
         }
+
     }
 }

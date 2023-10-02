@@ -18,12 +18,10 @@ namespace AnimeProgram
         {
             InitializeComponent();
         }
-
-        NekosBestApi _nekosBestApi;
-        List<ImageItem> _images = new List<ImageItem>();
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        NekosBestApi ?_nekosBestApi;//подключение Api
+        List<ImageItem> _images = new List<ImageItem>();//список фото\гифок
+        private void Window_Loaded(object sender, RoutedEventArgs e)//загрузка первых 10 фото
         {
-            
             var httpClient = new HttpClient
             {
                 BaseAddress = new Uri("https://nekos.best/api/v2")
@@ -38,46 +36,40 @@ namespace AnimeProgram
 
         }
 
-        private void ME_MediaEnded(object sender, RoutedEventArgs e)
+        private void ME_MediaEnded(object sender, RoutedEventArgs e)//постоянный перезапуск гифок 
         {
+
             var mediaElement = sender as MediaElement;
-            mediaElement.Position = TimeSpan.FromMilliseconds(1);
-            mediaElement.Play();
+            if (mediaElement != null)
+            {
+                mediaElement.Position = TimeSpan.FromMilliseconds(1);
+                mediaElement.Play();
+            }
         }
 
-        private void StackPanel_Executed(object sender, EventArgs e)
-        {
-            var panel = sender as StackPanel;
-            MessageBox.Show(panel.Children[0].ToString());
-            var me = panel.Children[0] as MediaElement;
-            me.Play();
-
-        }
-
+        //при нажатии на стекпанель открываеться новое окно с информацией о изображении
         private void StackPanel_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             ImageItem imageItem = (sender as FrameworkElement)?.DataContext as ImageItem;
 
             if (imageItem != null)
             {
-                // Создайте новое окно InfoWindow
                 InfoWindow infoWindow = new InfoWindow
                 {
                     Name = imageItem.Author,
                     URL = imageItem.Url
                 };
-
-                // Откройте окно
                 infoWindow.ShowDialog();
             }
         }
         
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)//открытие фильтра
         {
             filterWindow filterWindow = new filterWindow();
             filterWindow.ComboBoxItemSelected += filterWindow_SelectionChanged; 
             filterWindow.ShowDialog();
         }
+        //получаем тип фотографии и отправляем в перезапись формы с выбраным фильтром
         private async void filterWindow_SelectionChanged(object sender, string selectedValue)
         {
             switch (selectedValue)
@@ -198,180 +190,177 @@ namespace AnimeProgram
                     break;
             }
         }
+        //переприсвоение данных под определённый фильтр что мы получили ранее
         private async Task ApplyFilter(FilterType filterType)
         {
             _images.Clear();
             for (int i = 0; i < 20; i++)
             {
-                string url;
-                string author;
-                switch (filterType)
+                if (_nekosBestApi != null)
                 {
-                    case FilterType.Waifu:
-                        url = (await _nekosBestApi.CategoryApi.Waifu()).Results[0].Url;
-                        author = (await _nekosBestApi.CategoryApi.Waifu()).Results[0].ArtistName;
-                        break;
-                    case FilterType.Husbando:
-                        url = (await _nekosBestApi.CategoryApi.Husbando()).Results[0]?.Url;
-                        author = (await _nekosBestApi.CategoryApi.Husbando()).Results[0].ArtistName;
-                        break;
-                    case FilterType.Kitsune:
-                        url = (await _nekosBestApi.CategoryApi.Kitsune()).Results[0]?.Url;
-                        author = (await _nekosBestApi.CategoryApi.Kitsune()).Results[0].ArtistName;
-                        break;
-                    case FilterType.Neko:
-                        url = (await _nekosBestApi.CategoryApi.Neko()).Results[0]?.Url;
-                        author = (await _nekosBestApi.CategoryApi.Neko()).Results[0].ArtistName;
-                        break;
-                    case FilterType.Dance:
-                        url = (await _nekosBestApi.ActionsApi.Dance()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Dance()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Baka:
-                        url = (await _nekosBestApi.ActionsApi.Baka()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Baka()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Bite:
-                        url = (await _nekosBestApi.ActionsApi.Bite()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Bite()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Blush:
-                        url = (await _nekosBestApi.ActionsApi.Blush()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Blush()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Bored:
-                        url = (await _nekosBestApi.ActionsApi.Bored()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Bored()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Cry:
-                        url = (await _nekosBestApi.ActionsApi.Cry()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Cry()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Cuddle:
-                        url = (await _nekosBestApi.ActionsApi.Cuddle()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Cuddle()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Facepalm:
-                        url = (await _nekosBestApi.ActionsApi.Facepalm()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Facepalm()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Feed:
-                        url = (await _nekosBestApi.ActionsApi.Feed()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Feed()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Handhold:
-                        url = (await _nekosBestApi.ActionsApi.Handhold()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Handhold()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Happy:
-                        url = (await _nekosBestApi.ActionsApi.Happy()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Happy()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Highfive:
-                        url = (await _nekosBestApi.ActionsApi.Highfive()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Highfive()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Hug:
-                        url = (await _nekosBestApi.ActionsApi.Hug()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Hug()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Kick:
-                        url = (await _nekosBestApi.ActionsApi.Kick()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Kick()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Kiss:
-                        url = (await _nekosBestApi.ActionsApi.Kiss()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Kiss()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Laugh:
-                        url = (await _nekosBestApi.ActionsApi.Laugh()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Laugh()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Nod:
-                        url = (await _nekosBestApi.ActionsApi.Nod()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Nod()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Nom:
-                        url = (await _nekosBestApi.ActionsApi.Nom()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Nom()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Nope:
-                        url = (await _nekosBestApi.ActionsApi.Nope()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Nope()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Pat:
-                        url = (await _nekosBestApi.ActionsApi.Pat()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Pat()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Poke:
-                        url = (await _nekosBestApi.ActionsApi.Poke()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Poke()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Pout:
-                        url = (await _nekosBestApi.ActionsApi.Pout()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Pout()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Shrug:
-                        url = (await _nekosBestApi.ActionsApi.Shrug()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Shrug()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Slap:
-                        url = (await _nekosBestApi.ActionsApi.Slap()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Slap()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Sleep:
-                        url = (await _nekosBestApi.ActionsApi.Sleep()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Sleep()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Smile:
-                        url = (await _nekosBestApi.ActionsApi.Smile()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Smile()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Smug:
-                        url = (await _nekosBestApi.ActionsApi.Smug()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Smug()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Stare:
-                        url = (await _nekosBestApi.ActionsApi.Stare()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Stare()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Think:
-                        url = (await _nekosBestApi.ActionsApi.Think()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Think()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Thumbsup:
-                        url = (await _nekosBestApi.ActionsApi.Thumbsup()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Thumbsup()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Tickle:
-                        url = (await _nekosBestApi.ActionsApi.Tickle()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Tickle()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Wave:
-                        url = (await _nekosBestApi.ActionsApi.Wave()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Wave()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Wink:
-                        url = (await _nekosBestApi.ActionsApi.Wink()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Wink()).Results[0].AnimeName;
-                        break;
-                    case FilterType.Yeet:
-                        url = (await _nekosBestApi.ActionsApi.Dance()).Results[0]?.Url;
-                        author = (await _nekosBestApi.ActionsApi.Yeet()).Results[0].AnimeName;
-                        break;
-                    default:
-                        throw new ArgumentException("incorrect filter type");
-                }
-
-                if (!string.IsNullOrEmpty(url))
-                {
-                    _images.Add(new ImageItem(url, author));
+                    switch (filterType)
+                    {
+                        case FilterType.Waifu:
+                            var waifu = _nekosBestApi.CategoryApi.Waifu().Result.Results[0];
+                            _images.Add(new ImageItem(waifu.Url, waifu.ArtistName));
+                            break;
+                        case FilterType.Husbando:
+                            var husbando = _nekosBestApi.CategoryApi.Husbando().Result.Results[0];
+                            _images.Add(new ImageItem(husbando.Url, husbando.ArtistName));
+                            break;
+                        case FilterType.Kitsune:
+                            var kitsune = _nekosBestApi.CategoryApi.Kitsune().Result.Results[0];
+                            _images.Add(new ImageItem(kitsune.Url, kitsune.ArtistName));
+                            break;
+                        case FilterType.Neko:
+                            var neko = _nekosBestApi.CategoryApi.Neko().Result.Results[0];
+                            _images.Add(new ImageItem(neko.Url, neko.ArtistName));
+                            break;
+                        case FilterType.Dance:
+                            var dance = _nekosBestApi.ActionsApi.Dance().Result.Results[0];
+                            _images.Add(new ImageItem(dance.Url, dance.AnimeName));
+                            break;
+                        case FilterType.Baka:
+                            var baka = _nekosBestApi.ActionsApi.Baka().Result.Results[0];
+                            _images.Add(new ImageItem(baka.Url, baka.AnimeName));
+                            break;
+                        case FilterType.Bite:
+                            var bite = _nekosBestApi.ActionsApi.Bite().Result.Results[0];
+                            _images.Add(new ImageItem(bite.Url, bite.AnimeName));
+                            break;
+                        case FilterType.Blush:
+                            var blush = _nekosBestApi.ActionsApi.Blush().Result.Results[0];
+                            _images.Add(new ImageItem(blush.Url, blush.AnimeName));
+                            break;
+                        case FilterType.Bored:
+                            var bored = _nekosBestApi.ActionsApi.Bored().Result.Results[0];
+                            _images.Add(new ImageItem(bored.Url, bored.AnimeName));
+                            break;
+                        case FilterType.Cry:
+                            var cry = _nekosBestApi.ActionsApi.Cry().Result.Results[0];
+                            _images.Add(new ImageItem(cry.Url, cry.AnimeName));
+                            break;
+                        case FilterType.Cuddle:
+                            var cuddle = _nekosBestApi.ActionsApi.Cuddle().Result.Results[0];
+                            _images.Add(new ImageItem(cuddle.Url, cuddle.AnimeName));
+                            break;
+                        case FilterType.Facepalm:
+                            var facepalm = _nekosBestApi.ActionsApi.Facepalm().Result.Results[0];
+                            _images.Add(new ImageItem(facepalm.Url, facepalm.AnimeName));
+                            break;
+                        case FilterType.Feed:
+                            var feed = _nekosBestApi.ActionsApi.Feed().Result.Results[0];
+                            _images.Add(new ImageItem(feed.Url, feed.AnimeName));
+                            break;
+                        case FilterType.Handhold:
+                            var handhold = _nekosBestApi.ActionsApi.Handhold().Result.Results[0];
+                            _images.Add(new ImageItem(handhold.Url, handhold.AnimeName));
+                            break;
+                        case FilterType.Happy:
+                            var happy = _nekosBestApi.ActionsApi.Happy().Result.Results[0];
+                            _images.Add(new ImageItem(happy.Url, happy.AnimeName));
+                            break;
+                        case FilterType.Highfive:
+                            var highfive = _nekosBestApi.ActionsApi.Highfive().Result.Results[0];
+                            _images.Add(new ImageItem(highfive.Url, highfive.AnimeName));
+                            break;
+                        case FilterType.Hug:
+                            var hug = _nekosBestApi.ActionsApi.Hug().Result.Results[0];
+                            _images.Add(new ImageItem(hug.Url, hug.AnimeName));
+                            break;
+                        case FilterType.Kick:
+                            var kock = _nekosBestApi.ActionsApi.Kick().Result.Results[0];
+                            _images.Add(new ImageItem(kock.Url, kock.AnimeName));
+                            break;
+                        case FilterType.Kiss:
+                            var kiss = _nekosBestApi.ActionsApi.Kiss().Result.Results[0];
+                            _images.Add(new ImageItem(kiss.Url, kiss.AnimeName));
+                            break;
+                        case FilterType.Laugh:
+                            var laudh = _nekosBestApi.ActionsApi.Laugh().Result.Results[0];
+                            _images.Add(new ImageItem(laudh.Url, laudh.AnimeName));
+                            break;
+                        case FilterType.Nod:
+                            var nod = _nekosBestApi.ActionsApi.Nod().Result.Results[0];
+                            _images.Add(new ImageItem(nod.Url, nod.AnimeName));
+                            break;
+                        case FilterType.Nom:
+                            var nom = _nekosBestApi.ActionsApi.Nom().Result.Results[0];
+                            _images.Add(new ImageItem(nom.Url, nom.AnimeName));
+                            break;
+                        case FilterType.Nope:
+                            var nope = _nekosBestApi.ActionsApi.Nope().Result.Results[0];
+                            _images.Add(new ImageItem(nope.Url, nope.AnimeName));
+                            break;
+                        case FilterType.Pat:
+                            var pat = _nekosBestApi.ActionsApi.Pat().Result.Results[0];
+                            _images.Add(new ImageItem(pat.Url, pat.AnimeName));
+                            break;
+                        case FilterType.Poke:
+                            var poke = _nekosBestApi.ActionsApi.Poke().Result.Results[0];
+                            _images.Add(new ImageItem(poke.Url, poke.AnimeName));
+                            break;
+                        case FilterType.Pout:
+                            var pout = _nekosBestApi.ActionsApi.Pout().Result.Results[0];
+                            _images.Add(new ImageItem(pout.Url, pout.AnimeName));
+                            break;
+                        case FilterType.Shrug:
+                            var shrug = _nekosBestApi.ActionsApi.Shrug().Result.Results[0];
+                            _images.Add(new ImageItem(shrug.Url, shrug.AnimeName));
+                            break;
+                        case FilterType.Slap:
+                            var salp = _nekosBestApi.ActionsApi.Slap().Result.Results[0];
+                            _images.Add(new ImageItem(salp.Url, salp.AnimeName));
+                            break;
+                        case FilterType.Sleep:
+                            var sleep = _nekosBestApi.ActionsApi.Sleep().Result.Results[0];
+                            _images.Add(new ImageItem(sleep.Url, sleep.AnimeName));
+                            break;
+                        case FilterType.Smile:
+                            var smile = _nekosBestApi.ActionsApi.Smile().Result.Results[0];
+                            _images.Add(new ImageItem(smile.Url, smile.AnimeName));
+                            break;
+                        case FilterType.Smug:
+                            var smug = _nekosBestApi.ActionsApi.Smug().Result.Results[0];
+                            _images.Add(new ImageItem(smug.Url, smug.AnimeName));
+                            break;
+                        case FilterType.Stare:
+                            var stare = _nekosBestApi.ActionsApi.Stare().Result.Results[0];
+                            _images.Add(new ImageItem(stare.Url, stare.AnimeName));
+                            break;
+                        case FilterType.Think:
+                            var think = _nekosBestApi.ActionsApi.Think().Result.Results[0];
+                            _images.Add(new ImageItem(think.Url, think.AnimeName));
+                            break;
+                        case FilterType.Thumbsup:
+                            var thumbsup = _nekosBestApi.ActionsApi.Thumbsup().Result.Results[0];
+                            _images.Add(new ImageItem(thumbsup.Url, thumbsup.AnimeName));
+                            break;
+                        case FilterType.Tickle:
+                            var tickle = _nekosBestApi.ActionsApi.Tickle().Result.Results[0];
+                            _images.Add(new ImageItem(tickle.Url, tickle.AnimeName));
+                            break;
+                        case FilterType.Wave:
+                            var wave = _nekosBestApi.ActionsApi.Wave().Result.Results[0];
+                            _images.Add(new ImageItem(wave.Url, wave.AnimeName));
+                            break;
+                        case FilterType.Wink:
+                            var winck = _nekosBestApi.ActionsApi.Wink().Result.Results[0];
+                            _images.Add(new ImageItem(winck.Url, winck.AnimeName));
+                            break;
+                        case FilterType.Yeet:
+                            var yeet = _nekosBestApi.ActionsApi.Yeet().Result.Results[0];
+                            _images.Add(new ImageItem(yeet.Url, yeet.AnimeName));
+                            break;
+                        default:
+                            throw new ArgumentException("incorrect filter type");
+                    }
                 }
             }
-
             listImages.ItemsSource = null;
             listImages.ItemsSource = _images;
         }
+        //все типы
         public enum FilterType
         {
             Waifu,
