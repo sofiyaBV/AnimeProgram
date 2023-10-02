@@ -21,15 +21,15 @@
                     <UniformGrid Columns="5" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            <ListView.ItemTemplate>
+            <ListView.ItemTemplate >
                 <DataTemplate>
                     <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" MouseDown="StackPanel_MouseDown">
-                        <MediaElement LoadedBehavior="Play" UnloadedBehavior="Manual" Source="{Binding Url}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="200" ClipToBounds="True"/>
+                        <MediaElement x:Name="me_element" LoadedBehavior="Play" UnloadedBehavior="Manual" Source="{Binding Url}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="200" ClipToBounds="True" MediaEnded="ME_MediaEnded"/>
                         <TextBlock Text="{Binding Author}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Width="50" Height="50" Grid.Column="1" Grid.Row="0" />
+        <Button Width="50" Height="50" Grid.Column="2" Grid.Row="0" Click="Button_Click" />
     </Grid>
 </Window>
