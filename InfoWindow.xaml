@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AnimeProgram"
         mc:Ignorable="d"
-        Title="InfoWindow" Height="450" Width="800">
+        Title="InfoWindow" Height="450" Width="800" Loaded="Window_Loaded">
     <Grid>
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -13,7 +13,6 @@
                 <GradientStop Color="#C4DDFE" Offset="1" />
             </LinearGradientBrush>
         </Grid.Background>
-
         <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Center">
             <MediaElement x:Name="me_element" LoadedBehavior="Play" UnloadedBehavior="Manual" Source="{Binding Url}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="200" ClipToBounds="True" MediaEnded="ME_MediaEnded"/>
             <StackPanel Orientation="Horizontal" >
@@ -23,6 +22,7 @@
             <StackPanel Orientation="Horizontal" >
                 <Label Content="Name:"/>
                 <TextBlock x:Name="tb_Name" Margin="0 5 0 0"/>
+               
             </StackPanel>
         </StackPanel>
     </Grid>

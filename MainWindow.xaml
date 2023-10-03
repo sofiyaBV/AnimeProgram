@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:AnimeProgram"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
     <Window.Resources>
         <FontFamily x:Key="KatibehFont">/Fonts/Katibeh/#Katibeh</FontFamily>
     </Window.Resources>
@@ -54,6 +55,7 @@
                     <StackPanel Orientation="Vertical" VerticalAlignment="Center" MouseDown="StackPanel_MouseDown">
                         <MediaElement LoadedBehavior="Play" UnloadedBehavior="Manual" Source="{Binding Url}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="350" ClipToBounds="True"/>
                         <TextBlock Text="{Binding Author}" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

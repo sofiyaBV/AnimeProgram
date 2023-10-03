@@ -21,6 +21,7 @@
     <Resource Include="Assets\Images\FillterSticker.png" />
     <Resource Include="Fonts\Katibeh\Katibeh-Regular.ttf" />
     <Resource Include="Fonts\Katibeh\OFL.txt" />
+
   </ItemGroup>
 
 </Project>
