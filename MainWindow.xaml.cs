@@ -61,7 +61,6 @@ namespace AnimeProgram
                 infoWindow.ShowDialog();
             }
         }
-        
         private void Button_Click(object sender, RoutedEventArgs e)//открытие фильтра
         {
             filterWindow filterWindow = new filterWindow();
