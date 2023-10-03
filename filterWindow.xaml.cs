@@ -8,10 +8,10 @@ namespace AnimeProgram
     /// <summary>
     /// Логика взаимодействия для filterWindow.xaml
     /// </summary>
-    public partial class filterWindow : Window
+    public partial class FilterWindow : Window
     {
         public event EventHandler<string> ComboBoxItemSelected;
-        public filterWindow()
+        public FilterWindow()
         {
             InitializeComponent();
         }
@@ -67,7 +67,7 @@ namespace AnimeProgram
 
         private void cb_img_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(cb_img.SelectedItem != null)
+            if (cb_img.SelectedItem != null)
             {
                 string selectedValue = cb_img.SelectedItem.ToString();
                 ComboBoxItemSelected?.Invoke(this, selectedValue);
