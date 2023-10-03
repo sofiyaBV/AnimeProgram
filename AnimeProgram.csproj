@@ -8,7 +8,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NekosBestApiNet" Version="1.0.6" />
+    <None Remove="Assets\Images\FillterSticker.png" />
+    <None Remove="Fonts\Katibeh\Katibeh-Regular.ttf" />
+    <None Remove="Fonts\Katibeh\OFL.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Images\FillterSticker.png" />
+    <Resource Include="Fonts\Katibeh\Katibeh-Regular.ttf" />
+    <Resource Include="Fonts\Katibeh\OFL.txt" />
+
   </ItemGroup>
 
 </Project>
