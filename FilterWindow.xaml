@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AnimeProgram"
         mc:Ignorable="d"
-        Title="FilterWindow" Height="450" Width="800">
+        Title="FilterWindow" Height="450" Width="800" Loaded="Window_Loaded">
     <Window.Resources>
         <FontFamily x:Key="KatibehFont">/Fonts/Katibeh/#Katibeh</FontFamily>
     </Window.Resources>

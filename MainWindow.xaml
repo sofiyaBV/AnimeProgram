@@ -21,17 +21,12 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Foreground="White" Text="Anime Program" FontSize="45" FontFamily="{StaticResource KatibehFont}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20"/>
 
         <Grid Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
             <Button VerticalAlignment="Top" Click="FiltersButton_Click" Margin="0 10 10 0">
                 <Button.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -42,11 +37,11 @@
                 <Image Source="Assets/Images/FillterSticker.png" Width="30" Height="25"/>
             </Button>
         </Grid>
-
-        <ListView Grid.Row="1" x:Name="listImages">
+        
+        <ListView Grid.Row="1" x:Name="listImages" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="5"/>
+                    <UniformGrid Columns="4"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
 
@@ -55,7 +50,6 @@
                     <StackPanel Orientation="Vertical" VerticalAlignment="Center" MouseDown="StackPanel_MouseDown">
                         <MediaElement LoadedBehavior="Play" UnloadedBehavior="Manual" Source="{Binding Url}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="350" ClipToBounds="True"/>
                         <TextBlock Text="{Binding Author}" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

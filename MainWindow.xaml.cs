@@ -26,18 +26,16 @@ namespace AnimeProgram
                 BaseAddress = new Uri("https://nekos.best/api/v2")
             };
             _nekosBestApi = new NekosBestApi(httpClient);
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 15; i++)
             {
                 var request_item = _nekosBestApi.CategoryApi.Neko().Result.Results[0];
                 _images.Add(new ImageItem(request_item.Url, request_item.ArtistName));
             }
             listImages.ItemsSource = _images;
-
         }
 
         private void ME_MediaEnded(object sender, RoutedEventArgs e)//постоянный перезапуск гифок 
         {
-
             var mediaElement = sender as MediaElement;
             if (mediaElement != null)
             {
@@ -50,7 +48,6 @@ namespace AnimeProgram
         private void StackPanel_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             ImageItem imageItem = (sender as FrameworkElement)?.DataContext as ImageItem;
-
             if (imageItem != null)
             {
                 InfoWindow infoWindow = new InfoWindow
@@ -61,9 +58,9 @@ namespace AnimeProgram
                 infoWindow.ShowDialog();
             }
         }
-        private void Button_Click(object sender, RoutedEventArgs e)//открытие фильтра
+        private void FiltersButton_Click(object sender, RoutedEventArgs e)//открытие фильтра
         {
-            filterWindow filterWindow = new filterWindow();
+            FilterWindow filterWindow = new FilterWindow();
             filterWindow.ComboBoxItemSelected += filterWindow_SelectionChanged; 
             filterWindow.ShowDialog();
         }
@@ -400,5 +397,6 @@ namespace AnimeProgram
             Wink,
             Yeet
          }
+
     }
 }
